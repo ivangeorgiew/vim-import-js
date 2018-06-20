@@ -9,3 +9,5 @@ endif
 if !hasmapto(':ImportJSGoto<CR>') && maparg('<Leader>g', 'n') == ''
   silent! nnoremap <buffer> <unique> <silent> <Leader>g :ImportJSGoto<CR>
 endif
+
+call importjs#Init()

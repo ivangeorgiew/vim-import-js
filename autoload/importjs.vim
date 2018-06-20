@@ -51,9 +51,6 @@ function importjs#TryExecPayload(payload, tryCount)
 endfunction
 
 function importjs#ExecCommand(command, arg, ...)
-  " lazy-load the background process
-  call importjs#Init()
-
   let sendContent = (a:0 >= 1) ? a:1 : 1
   if sendContent == 1
     let fileContent = join(getline(1, '$'), "\n")
