@@ -28,7 +28,7 @@ function importjs#TryExecPayload(payload, tryCount)
 
   if exists("*ch_evalraw")
     let resultString = ch_evalraw(g:ImportJSChannel, json_encode(a:payload) . "\n")
-    if (resultString != "")
+    if (resultString != "" || a:payload['command'] == "init")
       return resultString
     endif
   endif
@@ -269,4 +269,6 @@ function! importjs#Init()
     " > ImportJS (v2.10.1) DAEMON active.
     call ch_readraw(g:ImportJSChannel, { "timeout": 2000 })
   endif
+
+  call importjs#ExecCommand("init", "")
 endfunction
