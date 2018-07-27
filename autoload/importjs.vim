@@ -21,6 +21,11 @@ endfunction
 " Execute the command. If we get an empty response, keep trying to execute until
 " we get a non-empty response or hit the max number of tries.
 function importjs#TryExecPayload(payload, tryCount)
+  if !exists("g:ImportJSChannel")
+    echoerr "If you just added `package.json` just wait a few seconds"
+    return
+  endif
+
   if (a:tryCount > 3)
     echoerr "No response from `importjs` after " . a:tryCount . " tries"
     return
@@ -57,10 +62,13 @@ function importjs#ExecCommand(command, arg, ...)
   else
     let fileContent = ''
   endif
+
+  " pathToFile must end in a javascript file in order for importjs to start
+  let pathToFile = (a:command == 'init') ? getcwd() . '/INIT.js' : expand("%:p")
   let payload = {
     \'command': a:command,
     \'commandArg': a:arg,
-    \'pathToFile': expand("%:p"),
+    \'pathToFile': pathToFile,
     \'fileContent': fileContent,
   \}
 
@@ -271,4 +279,18 @@ function! importjs#Init()
   endif
 
   call importjs#ExecCommand("init", "")
+endfunction
+
+function! importjs#FindPackageJson(fileDir)
+  if exists("s:job") || a:fileDir !~ expand('~')
+    return
+  endif
+
+  let parentDir = fnamemodify(a:fileDir, ':h')
+
+  if filereadable(a:fileDir . "/package.json")
+    call importjs#Init()
+  elseif parentDir != expand('~')
+    call importjs#FindPackageJson(parentDir)
+  endif
 endfunction
