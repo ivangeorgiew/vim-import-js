@@ -170,14 +170,10 @@ function importjs#ReplaceBuffer(content)
   " Save cursor position so that we can restore it later
   let cursorPos = getpos(".")
   let originalLineCount = line("$")
-  " Delete all lines from the buffer
-  execute "%d"
-  " Write the resulting content into the buffer
-  let @a = a:content
-  normal! G
-  execute "put a"
-  " Remove lingering line at the top:
-  execut ":1d"
+  "Overwrite the current file
+  execute 'call writefile(split(a:content, "\n"), expand("%"))'
+  "Reopen the file
+  execute 'silent! e!'
   " Restore cursor position, attempting to compensate for the resulting
   " imports moving the original line up or down
   let newLineCount = line("$")
