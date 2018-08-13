@@ -22,7 +22,7 @@ endfunction
 " we get a non-empty response or hit the max number of tries.
 function importjs#TryExecPayload(payload, tryCount)
   if !exists("g:ImportJSChannel")
-    echoerr "If you just added `package.json` just wait a few seconds"
+    echoerr "ImportJS can't run in the current context. You don't have a `package.json` file"
     return
   endif
 
