@@ -278,7 +278,9 @@ function! importjs#Init()
 endfunction
 
 function! importjs#FindPackageJson(fileDir)
-  if exists("s:job") || a:fileDir !~ expand('~')
+  if exists("s:job") ||
+        \ (expand("%:t") != '' && expand("%:t") !~ '\(\.js\)') ||
+        \ a:fileDir !~ expand('~')
     return
   endif
 
